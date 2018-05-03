@@ -15,6 +15,8 @@
 #include "zcash/NoteEncryption.hpp"
 #include "zcash/IncrementalMerkleTree.hpp"
 
+#include <array>
+
 using namespace libzcash;
 
 extern ZCJoinSplit* params;
@@ -37,25 +39,25 @@ void test_full_api(ZCJoinSplit* js)
     uint64_t vpub_old = 10;
     uint64_t vpub_new = 0;
     uint256 pubKeyHash = random_uint256();
-    boost::array<uint256, 2> macs;
-    boost::array<uint256, 2> nullifiers;
-    boost::array<uint256, 2> commitments;
+    std::array<uint256, 2> macs;
+    std::array<uint256, 2> nullifiers;
+    std::array<uint256, 2> commitments;
     uint256 rt = tree.root();
-    boost::array<ZCNoteEncryption::Ciphertext, 2> ciphertexts;
+    std::array<ZCNoteEncryption::Ciphertext, 2> ciphertexts;
     ZCProof proof;
 
     {
-        boost::array<JSInput, 2> inputs = {
+        std::array<JSInput, 2> inputs = {
             JSInput(), // dummy input
             JSInput() // dummy input
         };
 
-        boost::array<JSOutput, 2> outputs = {
+        std::array<JSOutput, 2> outputs = {
             JSOutput(recipient_addr, 10),
             JSOutput() // dummy output
         };
 
-        boost::array<SproutNote, 2> output_notes;
+        std::array<SproutNote, 2> output_notes;
 
         // Perform the proof
         proof = js->prove(
@@ -117,7 +119,7 @@ void test_full_api(ZCJoinSplit* js)
     pubKeyHash = random_uint256();
 
     {
-        boost::array<JSInput, 2> inputs = {
+        std::array<JSInput, 2> inputs = {
             JSInput(), // dummy input
             JSInput(witness_recipient, decrypted_note, recipient_key)
         };
@@ -125,12 +127,12 @@ void test_full_api(ZCJoinSplit* js)
         SpendingKey second_recipient = SpendingKey::random();
         PaymentAddress second_addr = second_recipient.address();
 
-        boost::array<JSOutput, 2> outputs = {
+        std::array<JSOutput, 2> outputs = {
             JSOutput(second_addr, 9),
             JSOutput() // dummy output
         };
 
-        boost::array<SproutNote, 2> output_notes;
+        std::array<SproutNote, 2> output_notes;
 
         // Perform the proof
         proof = js->prove(
@@ -169,8 +171,8 @@ void test_full_api(ZCJoinSplit* js)
 // to test exceptions
 void invokeAPI(
     ZCJoinSplit* js,
-    const boost::array<JSInput, 2>& inputs,
-    const boost::array<JSOutput, 2>& outputs,
+    const std::array<JSInput, 2>& inputs,
+    const std::array<JSOutput, 2>& outputs,
     uint64_t vpub_old,
     uint64_t vpub_new,
     const uint256& rt
@@ -178,12 +180,12 @@ void invokeAPI(
     uint256 ephemeralKey;
     uint256 randomSeed;
     uint256 pubKeyHash = random_uint256();
-    boost::array<uint256, 2> macs;
-    boost::array<uint256, 2> nullifiers;
-    boost::array<uint256, 2> commitments;
-    boost::array<ZCNoteEncryption::Ciphertext, 2> ciphertexts;
+    std::array<uint256, 2> macs;
+    std::array<uint256, 2> nullifiers;
+    std::array<uint256, 2> commitments;
+    std::array<ZCNoteEncryption::Ciphertext, 2> ciphertexts;
 
-    boost::array<SproutNote, 2> output_notes;
+    std::array<SproutNote, 2> output_notes;
 
     ZCProof proof = js->prove(
         inputs,
@@ -205,8 +207,8 @@ void invokeAPI(
 
 void invokeAPIFailure(
     ZCJoinSplit* js,
-    const boost::array<JSInput, 2>& inputs,
-    const boost::array<JSOutput, 2>& outputs,
+    const std::array<JSInput, 2>& inputs,
+    const std::array<JSOutput, 2>& outputs,
     uint64_t vpub_old,
     uint64_t vpub_new,
     const uint256& rt,
@@ -532,7 +534,7 @@ TEST(joinsplit, note_plaintexts)
               random_uint256()
              );
 
-    boost::array<unsigned char, ZC_MEMO_SIZE> memo;
+    std::array<unsigned char, ZC_MEMO_SIZE> memo;
 
     SproutNotePlaintext note_pt(note, memo);
 
